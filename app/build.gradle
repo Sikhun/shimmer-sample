@@ -2,6 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+Properties props = new Properties()
+props.load(project.rootProject.file('gradle.properties').newDataInputStream())
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -14,10 +17,6 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        each { type ->
-            type.buildConfigField 'String', 'TMDB_API_KEY', theMovieDbApiKey
-        }
     }
 
     buildTypes {
@@ -25,9 +24,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        /*buildTypes.each {
-            it.buildConfigField 'String', 'TMDB_API_KEY', theMovieDbApiKey
-        }*/
+        buildTypes.each {
+            it.buildConfigField 'String', 'TMDB_API_KEY', props.getProperty('theMovieDbApiKey')
+        }
     }
 }
 
